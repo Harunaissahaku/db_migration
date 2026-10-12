@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - 'database-migrations/sql/**'
-      - '.github/workflows/db-migrate.yml'
+      - 'sql/**'
+      - '.github/workflows/db_migration.yaml'
   workflow_dispatch:
 
 permissions:
@@ -25,7 +25,7 @@ jobs:
       FLYWAY_URL: ${{ secrets.DB_URL }}
       FLYWAY_USER: ${{ secrets.DB_USERNAME }}
       FLYWAY_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      FLYWAY_LOCATIONS: filesystem:${{ github.workspace }}/database-migrations/sql
+      FLYWAY_LOCATIONS: filesystem:${{ github.workspace }}/sql
 
     steps:
       - name: Checkout repository
@@ -33,6 +33,9 @@ jobs:
 
       - name: Check Flyway installation
         run: flyway -v
+
+      - name: Validate migrations
+        run: flyway validate
 
       - name: Show migration status
         run: flyway info
